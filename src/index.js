@@ -2,28 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import chalk from 'chalk'
 import dotenv from 'dotenv';
-
-
-
-import connection from './dbStrategy/postgres.js';
+import getCategory from './routes/categoriesRouter.js';
 
 dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/customers", async (_, res) => {
-	try {
-    
-    //desestruturação das rows
-    const {rows: customers} = await connection.query('SELECT * FROM customers');
-    res.send(customers);
-
-  } catch (error) {
-    
-  }
-});
-
+app.use(getCategory);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
