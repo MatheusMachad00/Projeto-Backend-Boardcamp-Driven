@@ -12,7 +12,7 @@ export async function getCategories(_, res) {
 
 export async function insertCategory(req, res) {
   try {
-    const {name} = req.body;
+    const { name } = req.body;
 
     await connection.query('INSERT INTO categories (name) VALUES ($1)', [name]);
     res.sendStatus(201);

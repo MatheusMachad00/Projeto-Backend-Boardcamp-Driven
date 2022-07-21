@@ -10,10 +10,10 @@ export async function getGames(_, res) {
   }
 }
 
-export async function postGames(req, res){
+export async function postGame(req, res) {
   try {
-    
+
   } catch (error) {
-    
+
   }
 }

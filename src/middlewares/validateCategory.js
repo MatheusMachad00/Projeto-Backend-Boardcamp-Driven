@@ -16,7 +16,7 @@ export async function validateCategory(req, res, next) {
 
   const checkName = await connection.query('SELECT * FROM categories WHERE name = ($1)', [category.name]);
 
-  if(checkName.rows.length != 0){
+  if (checkName.rows.length != 0) {
     return res.status(409).send({ errorMessage: "Categoria já cadastrada." });
   };
 
