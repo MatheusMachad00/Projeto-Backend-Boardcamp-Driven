@@ -2,14 +2,16 @@ import express from 'express';
 import cors from 'cors';
 import chalk from 'chalk'
 import dotenv from 'dotenv';
-import getCategory from './routes/categoriesRouter.js';
+import category from './routes/categoriesRouter.js';
+import game from './routes/gamesRouter.js';
 
 dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use(getCategory);
+app.use(category);
+app.use(game);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
