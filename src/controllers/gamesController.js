@@ -3,7 +3,6 @@ import connection from "../dbStrategy/postgres.js";
 export async function getGames(req, res) {
   let { name } = req.query;
   if(!name) name = '';
-  console.log(req.query);
   try {
     
 
@@ -14,39 +13,21 @@ export async function getGames(req, res) {
       `, [newName]);
 
     res.send(games);
+    }else{
+      const { rows: games } = await connection.query(`
+          SELECT games.*, categories.name AS "categoryName"
+          FROM games
+          JOIN categories
+          ON games."categoryId" = categories.id;`);
+    
+        res.send(games);
     }
-
-    const { rows: games } = await connection.query(`
-        SELECT games.*, categories.name AS "categoryName"
-        FROM games
-        JOIN categories
-        ON games."categoryId" = categories.id;`);
-  
-      res.send(games);
-
 
   } catch (error) {
     res.sendStatus(500);
     console.error(error);
   }
 }
-
-/* export async function getGamesByName(req, res) {
-  try {
-    let { name } = req.query;
-
-    let newName = name.concat(':*');
-
-    const { rows: games } = await connection.query(`
-    SELECT * FROM games WHERE to_tsvector(name) @@ to_tsquery($1)
-    `, [newName]);
-
-    res.send(games);
-  } catch (error) {
-    res.sendStatus(500);
-    console.error(error);
-  }
-} */
 
 export async function postGame(req, res) {
   try {
