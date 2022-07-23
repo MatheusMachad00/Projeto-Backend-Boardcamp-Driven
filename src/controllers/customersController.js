@@ -23,14 +23,18 @@ export async function getCustomers(req, res) {
   }
 }
 
-export async function getCustomerById (req,res) {
-  const {id} = req.params;
-  console.log(id)
+export async function getCustomerById(req, res) {
+  const { id } = req.params;
   try {
-    const {rows: customer} = await connection.query(`
+    const { rows: customer } = await connection.query(`
     SELECT * FROM customers where id = $1`, [id]);
-    if(!customer) return res.status(404).send('Usuário não encontrado');
-    res.status(200).send(customer);
+
+    if (!customer) {
+      return res.status(404).send('Usuário não encontrado');
+    } else {
+      res.status(200).send(customer);
+
+    }
 
   } catch (error) {
     res.sendStatus(500);
@@ -53,6 +57,21 @@ export async function createCustomer(req, res) {
 
     res.sendStatus(201);
   } catch (error) {
-
+    res.sendStatus(500);
+    console.error(error);
   }
+}
+
+export async function updateCustomer(req, res) {
+  const { id } = req.params
+  const { name, phone, cpf, birthday } = req.body
+  try {
+    const customer = await connection.query(`
+    UPDATE customers SET name=$1, phone=$2, cpf=$3, birthday=$4 
+    WHERE id = $5`, [name, phone, cpf, birthday, id])
+    res.sendStatus(200)
+} catch {
+  res.sendStatus(500);
+  console.error(error);
+}
 }
