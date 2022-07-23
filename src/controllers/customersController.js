@@ -7,14 +7,13 @@ export async function getCustomers(req, res) {
 
     if (cpf !== '') {
       let newCpf = cpf.concat(':*');
-      const { rows: games } = await connection.query(`
+      const { rows: customers } = await connection.query(`
       SELECT * FROM customers WHERE to_tsvector(cpf) @@ to_tsquery($1)
       `, [newCpf]);
 
-      res.send(games);
+      res.send(customers);
     } else {
       const { rows: customers } = await connection.query('SELECT * FROM customers');
-
       res.send(customers);
     }
 
@@ -23,6 +22,22 @@ export async function getCustomers(req, res) {
     console.error(error);
   }
 }
+
+export async function getCustomerById (req,res) {
+  const {id} = req.params;
+  console.log(id)
+  try {
+    const {rows: customer} = await connection.query(`
+    SELECT * FROM customers where id = $1`, [id]);
+    if(!customer) return res.status(404).send('Usuário não encontrado');
+    res.status(200).send(customer);
+
+  } catch (error) {
+    res.sendStatus(500);
+    console.error(error);
+  }
+}
+
 
 export async function createCustomer(req, res) {
   try {

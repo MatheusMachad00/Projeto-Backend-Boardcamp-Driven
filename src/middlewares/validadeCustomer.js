@@ -1,4 +1,5 @@
 import joi from "joi";
+import connection from "../dbStrategy/postgres.js";
 
 export async function validadteCustomer(req, res, next) {
   const category = req.body;
@@ -7,10 +8,10 @@ export async function validadteCustomer(req, res, next) {
     name: joi.string().required().min(1),
     phone: joi.string().min(10).max(11).required().pattern(/^([0-9]{10})([0-9]{1})?$/),
     cpf: joi.string().pattern(/^[0-9]{11}$/).required().max(11).min(11),
-    birthday: joi.string().isoDate().required()
+    birthday: joi.date().raw().required()
   });
 
-  const { error } = categorySchema.validate(category);
+  const validation = categorySchema.validate(category);
 
   if (validation.error) {
     return res.status(400).send(validation.error.details.map(detail => detail.message))
